@@ -1,7 +1,11 @@
 package ma.mundiapolis.tp2;
 
         import ma.mundiapolis.tp2.entities.Patient;
+        import ma.mundiapolis.tp2.entities.Role;
+        import ma.mundiapolis.tp2.entities.User;
         import ma.mundiapolis.tp2.repositories.PatientRepo;
+        import ma.mundiapolis.tp2.service.UserService;
+        import ma.mundiapolis.tp2.service.UserServiceImpl;
         import org.springframework.boot.CommandLineRunner;
         import org.springframework.boot.SpringApplication;
         import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +15,7 @@ package ma.mundiapolis.tp2;
 
         import java.util.Date;
         import java.util.List;
+        import java.util.stream.Stream;
 
 @SpringBootApplication
 public class Tp2Application {
@@ -22,7 +27,7 @@ public class Tp2Application {
 
 
     @Bean
-    CommandLineRunner start(PatientRepo patientRepository) {
+    CommandLineRunner start(PatientRepo patientRepository, UserService userServices) {
         return args -> {
 
             for (int i = 1; i < 100 ; i++) {
@@ -35,7 +40,7 @@ public class Tp2Application {
             System.out.println("Num page :" + patients.getNumber());
             List<Patient> content = patients.getContent(); // la liste entière
             Page<Patient> byMalade = patientRepository.findByMalade(true, PageRequest.of(0,4)); // la liste des personnes qui sont malades
-            List<Patient> patientList = patientRepository.chercherPatients("patient 6", 57);
+            List<Patient> patientList = patientRepository.chercherPatients("patient 4", 57);
             // Consulter la liste des patients par page
             patients.forEach(p->{
                 System.out.println("===================");
@@ -74,7 +79,52 @@ public class Tp2Application {
             System.out.println(patient1.isMalade());
 
 
+            // User-Role
+
+
+
+            System.out.println("partie user");
+            User user = new User();
+            user.setUserName("user1");
+            user.setPassword("123456");
+            userServices.addNewUser(user);
+
+
+
+
+            User user2 = new User();
+            user2.setUserName("user2");
+            user2.setPassword("123456");
+            userServices.addNewUser(user2);
+
+
+            User user3 = new User();
+            user3.setUserName("admin");
+            user3.setPassword("123456");
+            userServices.addNewUser(user3);
+
+
+
+           /* Stream.of("STUDENT","USER","ADMIN").forEach(r ->{
+                Role role1 = new Role();
+                role1.setRoleName(r);
+                userServices.addNewRole(role1);
+
+            });*/
+
+
+           /* userServices.addRoleToUser("user1", "STUDENT");
+            userServices.addRoleToUser("user2", "ADMIN");
+            userServices.addRoleToUser("user3","STUDENT");
+
+            userServices.addRoleToUser("admin","ADMIN");
+            userServices.addRoleToUser("admin","USER");*/
+
 
         };
     }
+
+
+
+
 };

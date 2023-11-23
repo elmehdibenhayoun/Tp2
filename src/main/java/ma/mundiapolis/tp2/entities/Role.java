@@ -1,19 +1,28 @@
 package ma.mundiapolis.tp2.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
+@Table(name="role")
 @Data @NoArgsConstructor @AllArgsConstructor
 
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String desc;
+    @Column(name="Description")
+    private String desc; //description
+    @Column(name="ROLE_NAME",unique=true,length = 20)
     private String roleName;
-    @ManyToMany
-    private List<User> users;
+    @ManyToMany(fetch = FetchType.EAGER)
+    // @JoinTable(name = "USERS_ROLES" )
+    @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<User> users=new ArrayList<>();
 }
